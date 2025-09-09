@@ -1,16 +1,9 @@
-import asyncio
-from pyexpat.errors import messages
-from src.utils.chat import get_response
+"""
+Run the FastAPI app using uvicorn.
+"""
 
-async def main():
-    messages = []
-    while True:
-        message = input("User: ")
-        if message == "exit":
-            break
-        messages.append({"role": "user", "content": message})
-        result = await get_response(messages)
-        print(f"Agent: {result.final_output}")
-        messages = result.to_input_list()
+if __name__ == "__main__":
+	import uvicorn
 
-asyncio.run(main())
+	# Use the src.api:app ASGI app. Host and port match typical local dev defaults.
+	uvicorn.run("src.api:app", host="127.0.0.1", port=8000, reload=True)

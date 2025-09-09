@@ -1,3 +1,5 @@
 openai-agents
 python-dotenv
 aiofiles
+fastapi
+uvicorn
