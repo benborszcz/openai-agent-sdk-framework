@@ -16,7 +16,7 @@ A template for building multi-agent AI systems using the OpenAI Agents SDK. This
 ## Quick Start
 
 ### CLI Mode
-Run the interactive CLI: `python -m src.main`
+Run the interactive CLI: `python run_cmd.py`
 
 ### API Mode
 Start the server: `python run.py`
