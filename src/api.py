@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from src.routes.agent_routes import router as agent_router
+from src.utils.agents import load_all_agents
 
 app = FastAPI()
 
-app.include_router(agent_router, prefix="/agent")
+# Dynamically load and register all agent modules.
+load_all_agents()
 
+app.include_router(agent_router, prefix="/agent")
 
 @app.get("/")
 async def root():

@@ -2,7 +2,9 @@ from agents import Agent
 from src.utils.agents.setup import models, model_settings, PrintingAgentHooks
 from src.utils.helpers import get_prompt_from_file
 from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
+from src.utils.agents.factory import register_agent
 
+@register_agent("planning")
 async def create_planning_agent() -> Agent:
     instructions = await get_prompt_from_file("planning_agent")
     return Agent(

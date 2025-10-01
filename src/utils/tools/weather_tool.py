@@ -13,6 +13,17 @@ from src.services.open_meteo import (
     get_historical_forecast,
     get_weather_bundle,
 )
+from src.types.weather_validation import (
+    DailyForecastParams,
+    HourlyForecastParams,
+    AirQualityParams,
+    MarineParams,
+    GeocodeParams,
+    HistoricalParams,
+    HistoricalForecastParams,
+    WeatherBundleParams,
+    LatLon
+)
 
 # ---- Forecast tools --------------------------------------------------------
 
@@ -30,7 +41,8 @@ async def tool_get_current_weather(
         longitude: The longitude of the location.
         timezone: The timezone for the results (default: "auto").
     """
-    return await get_current_weather(latitude, longitude, timezone=timezone)
+    params = LatLon(latitude=latitude, longitude=longitude)
+    return await get_current_weather(params.latitude, params.longitude, timezone=timezone)
 
 
 @function_tool
@@ -51,7 +63,8 @@ async def tool_get_daily_forecast(
         timezone: The timezone for the results (default: "auto").
         daily: Optional list of daily metrics to request.
     """
-    return await get_daily_forecast(latitude, longitude, days=days, timezone=timezone, daily=daily)
+    params = DailyForecastParams(latitude=latitude, longitude=longitude, days=days, timezone=timezone, daily=daily)
+    return await get_daily_forecast(params.latitude, params.longitude, days=params.days, timezone=params.timezone, daily=params.daily)
 
 
 @function_tool
@@ -72,7 +85,8 @@ async def tool_get_hourly_forecast(
         hourly: Optional list of hourly metrics to request.
         limit_hours: Optionally limit the number of hours returned.
     """
-    return await get_hourly_forecast(latitude, longitude, timezone=timezone, hourly=hourly, limit_hours=limit_hours)
+    params = HourlyForecastParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly, limit_hours=limit_hours)
+    return await get_hourly_forecast(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly, limit_hours=params.limit_hours)
 
 
 # ---- Air Quality -----------------------------------------------------------
@@ -95,7 +109,8 @@ async def tool_get_air_quality(
         hourly: Optional list of hourly air quality metrics.
         current: Optional list of current air quality metrics.
     """
-    return await get_air_quality(latitude, longitude, timezone=timezone, hourly=hourly, current=current)
+    params = AirQualityParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly, current=current)
+    return await get_air_quality(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly, current=params.current)
 
 
 # ---- Marine ----------------------------------------------------------------
@@ -116,7 +131,8 @@ async def tool_get_marine_forecast(
         timezone: The timezone for the results (default: "auto").
         hourly: Optional list of hourly marine metrics to request.
     """
-    return await get_marine_forecast(latitude, longitude, timezone=timezone, hourly=hourly)
+    params = MarineParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly)
+    return await get_marine_forecast(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly)
 
 
 # ---- Geocoding -------------------------------------------------------------
@@ -160,7 +176,8 @@ async def tool_geocode_search(
         - `generationtime_ms`: Server processing time
     """
     #print(f"Geocoding search for '{name}' (count={count}, language={language})")
-    ret = await geocode_search(name, count=count, language=language)
+    params = GeocodeParams(name=name, count=count, language=language)
+    ret = await geocode_search(params.name, count=params.count, language=params.language)
     #print(ret)
     return ret
 
@@ -186,7 +203,8 @@ async def tool_get_historical_weather(
         timezone: The timezone for the results (default: "auto").
         hourly: Optional list of hourly metrics to request.
     """
-    return await get_historical_weather(latitude, longitude, start_date=start_date, end_date=end_date, timezone=timezone, hourly=hourly)
+    params = HistoricalParams(latitude=latitude, longitude=longitude, start_date=start_date, end_date=end_date, timezone=timezone, hourly=hourly)
+    return await get_historical_weather(params.latitude, params.longitude, start_date=params.start_date, end_date=params.end_date, timezone=params.timezone, hourly=params.hourly)
 
 
 @function_tool
@@ -209,7 +227,8 @@ async def tool_get_historical_forecast(
         timezone: The timezone for the results (default: "auto").
         hourly: Optional list of hourly metrics to request.
     """
-    return await get_historical_forecast(latitude, longitude, start_date=start_date, end_date=end_date, timezone=timezone, hourly=hourly)
+    params = HistoricalForecastParams(latitude=latitude, longitude=longitude, start_date=start_date, end_date=end_date, timezone=timezone, hourly=hourly)
+    return await get_historical_forecast(params.latitude, params.longitude, start_date=params.start_date, end_date=params.end_date, timezone=params.timezone, hourly=params.hourly)
 
 
 # ---- Convenience bundle ----------------------------------------------------
@@ -230,4 +249,5 @@ async def tool_get_weather_bundle(
         days: Number of days to forecast (default: 3).
         timezone: The timezone for the results (default: "auto").
     """
-    return await get_weather_bundle(latitude, longitude, timezone=timezone, days=days)
+    params = WeatherBundleParams(latitude=latitude, longitude=longitude, days=days, timezone=timezone)
+    return await get_weather_bundle(params.latitude, params.longitude, timezone=params.timezone, days=params.days)

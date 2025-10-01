@@ -12,8 +12,10 @@ from src.utils.tools.weather_tool import (
     tool_get_historical_forecast,
     tool_get_weather_bundle,
 )
+from src.utils.agents.factory import register_agent
 
 
+@register_agent("weather")
 async def create_weather_agent() -> Agent:
     """Create and return a Weather Agent.
 

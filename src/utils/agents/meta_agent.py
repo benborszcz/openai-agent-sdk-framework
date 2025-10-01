@@ -1,13 +1,15 @@
-from agents import Agent, tool
+import asyncio
+from agents import Agent
 from src.utils.agents.setup import models, model_settings, PrintingAgentHooks
 from src.utils.helpers import get_prompt_from_file
-from src.utils.agents.planning_agent import create_planning_agent
-from src.utils.agents.weather_agent import create_weather_agent
+from src.utils.agents.factory import get_agent, register_agent
 
+@register_agent("meta")
 async def create_meta_agent() -> Agent:
     instructions = await get_prompt_from_file("meta_agent")
-    planning_agent = await create_planning_agent()
-    weather_agent = await create_weather_agent()
+    planning_agent, weather_agent = await asyncio.gather(
+        get_agent("planning"), get_agent("weather")
+    )
     return Agent(
         name="Meta Agent",
         instructions=instructions,
