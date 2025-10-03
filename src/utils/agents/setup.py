@@ -206,4 +206,4 @@ class JSONLLogger(TracingProcessor):
     def force_flush(self) -> None:
         self.shutdown()
 
-add_trace_processor(JSONLLogger("traces.jsonl", flush_every=1))
+add_trace_processor(JSONLLogger("log/traces.jsonl", flush_every=1))
