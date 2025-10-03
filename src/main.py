@@ -1,11 +1,6 @@
-import asyncio
 from src.utils.chat import get_response
-from src.utils.agents.factory import warm_agents
-from src.utils.agents import load_all_agents
 
 async def main() -> None:
-    load_all_agents()
-    await warm_agents()
     messages = []
     while True:
         try:
