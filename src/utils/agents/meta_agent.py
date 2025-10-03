@@ -4,6 +4,8 @@ from src.utils.agents.setup import models, model_settings, PrintingAgentHooks
 from src.utils.helpers import get_prompt_from_file
 from src.utils.agents.planning_agent import planning_agent
 from src.utils.agents.weather_agent import weather_agent
+from src.utils.guardrails.us_weather_guardrail import us_weather_guardrail
+from src.utils.guardrails.no_poem_guardrail import no_poem_guardrail
 
 instructions = get_prompt_from_file("meta_agent")
 meta_agent = Agent(
@@ -21,5 +23,7 @@ meta_agent = Agent(
             tool_description="A tool for retrieving weather information. Takes in a natural language prompt and returns weather info."
         )
     ],
-    hooks=PrintingAgentHooks()
+    hooks=PrintingAgentHooks(),
+    input_guardrails=[us_weather_guardrail],
+    output_guardrails=[no_poem_guardrail],
 )
