@@ -209,3 +209,5 @@ __marimo__/
 
 # Additional files and directories to ignore
 ISSUES.md
+log/traces.jsonl
+TODO.md
