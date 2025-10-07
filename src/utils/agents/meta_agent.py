@@ -1,4 +1,3 @@
-import asyncio
 from agents import Agent
 from src.utils.agents.setup import models, model_settings, PrintingAgentHooks
 from src.utils.helpers import get_prompt_from_file
@@ -6,9 +5,10 @@ from src.utils.agents.planning_agent import planning_agent
 from src.utils.agents.weather_agent import weather_agent
 from src.utils.guardrails.us_weather_guardrail import us_weather_guardrail
 from src.utils.guardrails.no_poem_guardrail import no_poem_guardrail
+from src.utils.context.local_context import LocalContext
 
 instructions = get_prompt_from_file("meta_agent")
-meta_agent = Agent(
+meta_agent = Agent[LocalContext](
     name="Meta Agent",
     instructions=instructions,
     model=models["core"],

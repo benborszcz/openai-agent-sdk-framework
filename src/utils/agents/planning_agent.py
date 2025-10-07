@@ -2,9 +2,10 @@ from agents import Agent
 from src.utils.agents.setup import models, model_settings, PrintingAgentHooks
 from src.utils.helpers import get_prompt_from_file
 from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
+from src.utils.context.local_context import LocalContext
 
 instructions = get_prompt_from_file("planning_agent")
-planning_agent = Agent(
+planning_agent = Agent[LocalContext](
     name="Planning Agent",
     instructions=f"{RECOMMENDED_PROMPT_PREFIX}\n{instructions}",
     model=models["core"],

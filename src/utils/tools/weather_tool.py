@@ -40,6 +40,9 @@ async def tool_get_current_weather(
         latitude: The latitude of the location.
         longitude: The longitude of the location.
         timezone: The timezone for the results (default: "auto").
+
+    Returns:
+        A dictionary containing current weather data.
     """
     params = LatLon(latitude=latitude, longitude=longitude)
     return await get_current_weather(params.latitude, params.longitude, timezone=timezone)
@@ -62,6 +65,9 @@ async def tool_get_daily_forecast(
         days: Number of days to forecast (default: 3).
         timezone: The timezone for the results (default: "auto").
         daily: Optional list of daily metrics to request.
+
+    Returns:
+        A dictionary containing daily forecast data.
     """
     params = DailyForecastParams(latitude=latitude, longitude=longitude, days=days, timezone=timezone, daily=daily)
     return await get_daily_forecast(params.latitude, params.longitude, days=params.days, timezone=params.timezone, daily=params.daily)
@@ -84,6 +90,9 @@ async def tool_get_hourly_forecast(
         timezone: The timezone for the results (default: "auto").
         hourly: Optional list of hourly metrics to request.
         limit_hours: Optionally limit the number of hours returned.
+
+    Returns:
+        A dictionary containing hourly forecast data.
     """
     params = HourlyForecastParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly, limit_hours=limit_hours)
     return await get_hourly_forecast(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly, limit_hours=params.limit_hours)
@@ -108,6 +117,9 @@ async def tool_get_air_quality(
         timezone: The timezone for the results (default: "auto").
         hourly: Optional list of hourly air quality metrics.
         current: Optional list of current air quality metrics.
+
+    Returns:
+        A dictionary containing air quality data.
     """
     params = AirQualityParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly, current=current)
     return await get_air_quality(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly, current=params.current)
@@ -130,6 +142,9 @@ async def tool_get_marine_forecast(
         longitude: The longitude of the location.
         timezone: The timezone for the results (default: "auto").
         hourly: Optional list of hourly marine metrics to request.
+
+    Returns:
+        A dictionary containing marine forecast data.
     """
     params = MarineParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly)
     return await get_marine_forecast(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly)
@@ -202,6 +217,9 @@ async def tool_get_historical_weather(
         end_date: The end date (YYYY-MM-DD).
         timezone: The timezone for the results (default: "auto").
         hourly: Optional list of hourly metrics to request.
+
+    Returns:
+        A dictionary containing historical weather data.
     """
     params = HistoricalParams(latitude=latitude, longitude=longitude, start_date=start_date, end_date=end_date, timezone=timezone, hourly=hourly)
     return await get_historical_weather(params.latitude, params.longitude, start_date=params.start_date, end_date=params.end_date, timezone=params.timezone, hourly=params.hourly)
@@ -226,6 +244,9 @@ async def tool_get_historical_forecast(
         end_date: The end date (YYYY-MM-DD).
         timezone: The timezone for the results (default: "auto").
         hourly: Optional list of hourly metrics to request.
+
+    Returns:
+        A dictionary containing historical forecast data.
     """
     params = HistoricalForecastParams(latitude=latitude, longitude=longitude, start_date=start_date, end_date=end_date, timezone=timezone, hourly=hourly)
     return await get_historical_forecast(params.latitude, params.longitude, start_date=params.start_date, end_date=params.end_date, timezone=params.timezone, hourly=params.hourly)
@@ -248,6 +269,9 @@ async def tool_get_weather_bundle(
         longitude: The longitude of the location.
         days: Number of days to forecast (default: 3).
         timezone: The timezone for the results (default: "auto").
+
+    Returns:
+        A dictionary containing current weather data.
     """
     params = WeatherBundleParams(latitude=latitude, longitude=longitude, days=days, timezone=timezone)
     return await get_weather_bundle(params.latitude, params.longitude, timezone=params.timezone, days=params.days)

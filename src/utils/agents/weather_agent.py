@@ -1,5 +1,6 @@
 from agents import Agent
 from src.utils.agents.setup import models, model_settings, PrintingAgentHooks
+from src.utils.context.local_context import LocalContext
 from src.utils.helpers import get_prompt_from_file
 from src.utils.tools.weather_tool import (
     tool_get_current_weather,
@@ -14,7 +15,7 @@ from src.utils.tools.weather_tool import (
 )
 
 instructions = get_prompt_from_file("weather_agent")
-weather_agent = Agent(
+weather_agent = Agent[LocalContext](
     name="Weather Agent",
     instructions=instructions,
     model=models["fast"],
