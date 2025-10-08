@@ -2,6 +2,9 @@ import os
 import dotenv
 import json
 
+from collections.abc import Mapping
+from dataclasses import asdict, is_dataclass
+
 from agents import ModelSettings, AgentHooks
 from openai.types.shared import Reasoning
 from typing import Any, TypeVar
@@ -11,7 +14,7 @@ from agents.run_context import RunContextWrapper, TContext
 from agents.tool import Tool
 
 import json, threading, time
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Set
 
 from agents.tracing.processor_interface import TracingProcessor
 from agents.tracing.spans import Span
@@ -104,6 +107,51 @@ class PrintingAgentHooks(AgentHooks):
         """Called after a tool is invoked."""
         print(f"Tool {tool.name} ended for agent {agent.name}")
 
+def _sanitize_for_json(value: Any, *, _visited: Optional[Set[int]] = None) -> Any:
+    """Recursively convert ``value`` into a JSON-serializable structure."""
+
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+
+    if _visited is None:
+        _visited = set()
+
+    obj_id = id(value)
+    if obj_id in _visited:
+        return "<recursion>"
+    _visited.add(obj_id)
+
+    if isinstance(value, BaseException):
+        return {
+            "type": f"{value.__class__.__module__}.{value.__class__.__name__}",
+            "message": str(value),
+        }
+
+    if is_dataclass(value):
+        try:
+            return _sanitize_for_json(asdict(value), _visited=_visited)
+        except TypeError:
+            # Fallback to repr when dataclass fields are not serializable
+            return repr(value)
+
+    if isinstance(value, Mapping):
+        return {
+            str(key): _sanitize_for_json(item, _visited=_visited)
+            for key, item in value.items()
+        }
+
+    if isinstance(value, (list, tuple, set, frozenset)):
+        return [
+            _sanitize_for_json(item, _visited=_visited)
+            for item in value
+        ]
+
+    representation = repr(value)
+    if len(representation) > 1000:
+        representation = representation[:997] + "..."
+    return representation
+
+
 class JSONLLogger(TracingProcessor):
     """Generic JSONL tracing processor that logs every trace, span start, and span end.
 
@@ -133,7 +181,7 @@ class JSONLLogger(TracingProcessor):
         return None
 
     def _write_record(self, record: Dict[str, Any]) -> None:
-        line = json.dumps(record, ensure_ascii=False)
+        line = json.dumps(_sanitize_for_json(record), ensure_ascii=False)
         with self._lock:
             self._buffer.append(line)
             self._write_count += 1
