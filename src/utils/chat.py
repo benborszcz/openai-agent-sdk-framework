@@ -6,12 +6,13 @@ from src.utils.agents.code_agent import code_agent
 from src.utils.agents.structured_agent import structured_agent
 from src.utils.context.local_context import LocalContext
 
+
 async def get_response(messages: List[TResponseInputItem]) -> RunResult:
     # You can switch between different agents here
-    # agent = meta_agent
+    agent = meta_agent
     # agent = chat_agent
     # agent = code_agent
-    agent = structured_agent
+    # agent = structured_agent
     run_context = LocalContext(context={})
     result: RunResult = await Runner.run(agent, input=messages, context=run_context)
     return result

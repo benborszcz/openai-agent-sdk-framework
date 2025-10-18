@@ -2,18 +2,20 @@ from pydantic import BaseModel
 from agents import (
     Agent,
     GuardrailFunctionOutput,
-    OutputGuardrailTripwireTriggered,
     RunContextWrapper,
     Runner,
     output_guardrail,
 )
 
+
 class MessageOutput(BaseModel):
     response: str
 
+
 class PoemDetectionOutput(BaseModel):
     reasoning: str  # brief reasoning why classified as poem or not
-    is_poem: bool   # True if the content is (or strongly resembles) a poem
+    is_poem: bool  # True if the content is (or strongly resembles) a poem
+
 
 guardrail_agent = Agent(
     name="Poem guardrail",
@@ -34,6 +36,10 @@ async def no_poem_guardrail(
     result = await Runner.run(guardrail_agent, str(output), context=ctx.context)
     print(result.final_output)
     return GuardrailFunctionOutput(
-        output_info="Output appears to be a poem." if result.final_output.is_poem else "Output is not a poem.",
+        output_info=(
+            "Output appears to be a poem."
+            if result.final_output.is_poem
+            else "Output is not a poem."
+        ),
         tripwire_triggered=result.final_output.is_poem,
     )

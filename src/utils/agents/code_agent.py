@@ -12,5 +12,5 @@ code_agent = Agent[LocalContext](
     model_settings=model_settings["standard-high"],
     tools=[code_interpreter],
     handoff_description="This is a code agent that can execute Python code to perform computations, generate plots, and analyze data.",
-    hooks=PrintingAgentHooks()
+    hooks=PrintingAgentHooks(),
 )

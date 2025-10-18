@@ -1,6 +1,7 @@
 from agents import function_tool
 from src.utils.python_executor import execute_python
 
+
 @function_tool
 async def code_interpreter(code: str) -> str:
     """
@@ -55,25 +56,28 @@ async def code_interpreter(code: str) -> str:
     import builtins
     import typing
 
-    result = execute_python(code, context={
-        "math": math,
-        "pd": pd,
-        "np": np,
-        "plt": plt,
-        "json": json,
-        "re": re,
-        "datetime": datetime,
-        "random": random,
-        "statistics": statistics,
-        "itertools": itertools,
-        "collections": collections,
-        "os": os,
-        "sys": sys,
-        "io": io,
-        "traceback": traceback,
-        "time": time,
-        "builtins": builtins,
-        "typing": typing,
-    })
+    result = execute_python(
+        code,
+        context={
+            "math": math,
+            "pd": pd,
+            "np": np,
+            "plt": plt,
+            "json": json,
+            "re": re,
+            "datetime": datetime,
+            "random": random,
+            "statistics": statistics,
+            "itertools": itertools,
+            "collections": collections,
+            "os": os,
+            "sys": sys,
+            "io": io,
+            "traceback": traceback,
+            "time": time,
+            "builtins": builtins,
+            "typing": typing,
+        },
+    )
     print("Code Interpreter Execution Result:", result)
     return result

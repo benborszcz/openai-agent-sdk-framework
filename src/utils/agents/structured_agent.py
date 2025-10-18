@@ -1,5 +1,4 @@
-import json
-from agents import Agent, RunContextWrapper
+from agents import Agent
 from src.utils.agents.setup import models, model_settings, PrintingAgentHooks
 from src.utils.helpers import get_prompt_from_file
 from src.utils.context.local_context import LocalContext
@@ -14,5 +13,5 @@ structured_agent = Agent[LocalContext](
     model_settings=model_settings["standard-min"],
     handoff_description="This is a structured agent that can handle structured output tasks.",
     hooks=PrintingAgentHooks(),
-    output_type=ExampleStructure
+    output_type=ExampleStructure,
 )

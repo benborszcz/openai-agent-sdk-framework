@@ -1,0 +1,1 @@
+# Optimal retrieval is a rabbit hole to explore, your specific use case will determine the best approach. But here as an example we use a combo of embedding based cosine similarity search, and BM25 keyword search.

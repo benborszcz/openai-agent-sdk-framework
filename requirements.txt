@@ -9,3 +9,7 @@ pytest-asyncio==0.24.0
 pandas
 numpy
 matplotlib
+PyMuPDF
+chromadb
+black
+flake8

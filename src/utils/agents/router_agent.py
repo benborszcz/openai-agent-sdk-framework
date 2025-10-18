@@ -14,5 +14,5 @@ router_agent = Agent[LocalContext](
     model=models["core"],
     model_settings=model_settings["standard-low"],
     handoffs=[chat_agent, planning_agent, weather_agent],
-    hooks=PrintingAgentHooks()
+    hooks=PrintingAgentHooks(),
 )

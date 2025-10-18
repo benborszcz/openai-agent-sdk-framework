@@ -1,4 +1,3 @@
-import os
 import dotenv
 import json
 
@@ -7,19 +6,20 @@ from dataclasses import asdict, is_dataclass
 
 from agents import ModelSettings, AgentHooks
 from openai.types.shared import Reasoning
-from typing import Any, TypeVar
 
-from agents import Agent, AgentBase
+from agents import AgentBase
 from agents.run_context import RunContextWrapper, TContext
 from agents.tool import Tool
 
-import json, threading, time
-from typing import Any, Dict, Optional, Set
+import threading
+import time
+from typing import Any, Dict, Optional, Set, TypeVar
 
 from agents.tracing.processor_interface import TracingProcessor
 from agents.tracing.spans import Span
-from agents.tracing.span_data import AgentSpanData, FunctionSpanData
+from agents.tracing.span_data import AgentSpanData
 from agents.tracing import add_trace_processor  # or set_trace_processors
+
 TAgent = TypeVar("TAgent", bound=AgentBase)
 
 dotenv.load_dotenv()
@@ -36,26 +36,37 @@ Standard: Balances detail and brevity for general tasks.
 Detailed: Provides comprehensive responses with in-depth analysis.
 """
 
-models = {
-    "fast": "gpt-5-nano",
-    "core": "gpt-5-mini",
-    "expert": "gpt-5"
-}
+models = {"fast": "gpt-5-nano", "core": "gpt-5-mini", "expert": "gpt-5"}
 
 model_settings = {
     "brief-min": ModelSettings(reasoning=Reasoning(effort="minimal"), verbosity="low"),
     "brief-low": ModelSettings(reasoning=Reasoning(effort="low"), verbosity="low"),
     "brief-med": ModelSettings(reasoning=Reasoning(effort="medium"), verbosity="low"),
     "brief-high": ModelSettings(reasoning=Reasoning(effort="high"), verbosity="low"),
-    "standard-min": ModelSettings(reasoning=Reasoning(effort="minimal"), verbosity="medium"),
-    "standard-low": ModelSettings(reasoning=Reasoning(effort="low"), verbosity="medium"),
-    "standard-med": ModelSettings(reasoning=Reasoning(effort="medium"), verbosity="medium"),
-    "standard-high": ModelSettings(reasoning=Reasoning(effort="high"), verbosity="medium"),
-    "detailed-min": ModelSettings(reasoning=Reasoning(effort="minimal"), verbosity="high"),
+    "standard-min": ModelSettings(
+        reasoning=Reasoning(effort="minimal"), verbosity="medium"
+    ),
+    "standard-low": ModelSettings(
+        reasoning=Reasoning(effort="low"), verbosity="medium"
+    ),
+    "standard-med": ModelSettings(
+        reasoning=Reasoning(effort="medium"), verbosity="medium"
+    ),
+    "standard-high": ModelSettings(
+        reasoning=Reasoning(effort="high"), verbosity="medium"
+    ),
+    "detailed-min": ModelSettings(
+        reasoning=Reasoning(effort="minimal"), verbosity="high"
+    ),
     "detailed-low": ModelSettings(reasoning=Reasoning(effort="low"), verbosity="high"),
-    "detailed-med": ModelSettings(reasoning=Reasoning(effort="medium"), verbosity="high"),
-    "detailed-high": ModelSettings(reasoning=Reasoning(effort="high"), verbosity="high"),
+    "detailed-med": ModelSettings(
+        reasoning=Reasoning(effort="medium"), verbosity="high"
+    ),
+    "detailed-high": ModelSettings(
+        reasoning=Reasoning(effort="high"), verbosity="high"
+    ),
 }
+
 
 class PrintingAgentHooks(AgentHooks):
     """A class that receives callbacks on various lifecycle events for a specific agent. You can
@@ -64,7 +75,9 @@ class PrintingAgentHooks(AgentHooks):
     Subclass and override the methods you need.
     """
 
-    async def on_start(self, context: RunContextWrapper[TContext], agent: TAgent) -> None:
+    async def on_start(
+        self, context: RunContextWrapper[TContext], agent: TAgent
+    ) -> None:
         """Called before the agent is invoked. Called each time the running agent is changed to this
         agent."""
         print(f"Agent {agent.name} is starting")
@@ -107,6 +120,7 @@ class PrintingAgentHooks(AgentHooks):
         """Called after a tool is invoked."""
         print(f"Tool {tool.name} ended for agent {agent.name}")
 
+
 def _sanitize_for_json(value: Any, *, _visited: Optional[Set[int]] = None) -> Any:
     """Recursively convert ``value`` into a JSON-serializable structure."""
 
@@ -141,10 +155,7 @@ def _sanitize_for_json(value: Any, *, _visited: Optional[Set[int]] = None) -> An
         }
 
     if isinstance(value, (list, tuple, set, frozenset)):
-        return [
-            _sanitize_for_json(item, _visited=_visited)
-            for item in value
-        ]
+        return [_sanitize_for_json(item, _visited=_visited) for item in value]
 
     representation = repr(value)
     if len(representation) > 1000:
@@ -192,18 +203,22 @@ class JSONLLogger(TracingProcessor):
 
     # --------------- lifecycle hooks ---------------
     def on_trace_start(self, trace) -> None:
-        self._write_record({
-            "event": "trace_start",
-            "ts": time.time(),
-            "trace_id": getattr(trace, "trace_id", None),
-        })
+        self._write_record(
+            {
+                "event": "trace_start",
+                "ts": time.time(),
+                "trace_id": getattr(trace, "trace_id", None),
+            }
+        )
 
     def on_trace_end(self, trace) -> None:
-        self._write_record({
-            "event": "trace_end",
-            "ts": time.time(),
-            "trace_id": getattr(trace, "trace_id", None),
-        })
+        self._write_record(
+            {
+                "event": "trace_end",
+                "ts": time.time(),
+                "trace_id": getattr(trace, "trace_id", None),
+            }
+        )
 
     def on_span_start(self, span: Span[Any]) -> None:
         # store span early for ancestry resolution later
@@ -234,7 +249,11 @@ class JSONLLogger(TracingProcessor):
             "parent_id": span.parent_id,
             "span_type": type(sd).__name__,
             "agent_name": self._resolve_agent_ancestor(span),
-            "error": getattr(span, "error", None).export() if getattr(span, "error", None) else None,
+            "error": (
+                getattr(span, "error", None).export()
+                if getattr(span, "error", None)
+                else None
+            ),
         }
         # Include final output if present
         for attr in ("name", "input", "output", "role", "content"):
@@ -253,5 +272,6 @@ class JSONLLogger(TracingProcessor):
 
     def force_flush(self) -> None:
         self.shutdown()
+
 
 add_trace_processor(JSONLLogger("log/traces.jsonl", flush_every=1))

@@ -1,8 +1,11 @@
 from agents import function_tool, RunContextWrapper
 from src.utils.context.local_context import LocalContext
 
+
 @function_tool
-async def set_context_value(run_context: RunContextWrapper[LocalContext], key: str, value: str) -> str:
+async def set_context_value(
+    run_context: RunContextWrapper[LocalContext], key: str, value: str
+) -> str:
     """
     Sets a key-value pair in the agent's local context.
 

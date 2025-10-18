@@ -1,5 +1,6 @@
 from src.utils.chat import get_response
 
+
 async def main() -> None:
     messages = []
     while True:

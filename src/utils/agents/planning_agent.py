@@ -11,5 +11,5 @@ planning_agent = Agent[LocalContext](
     model=models["core"],
     model_settings=model_settings["standard-med"],
     handoff_description="This is a planning agent that can handle task planning and organization.",
-    hooks=PrintingAgentHooks()
+    hooks=PrintingAgentHooks(),
 )

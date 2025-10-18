@@ -3,33 +3,40 @@ from pydantic import BaseModel, Field, field_validator
 from datetime import date
 from typing import Optional, Iterable, Union
 
+
 class LatLon(BaseModel):
     latitude: float = Field(..., ge=-90.0, le=90.0)
     longitude: float = Field(..., ge=-180.0, le=180.0)
+
 
 class DailyForecastParams(LatLon):
     days: int = Field(3, ge=1, le=14)
     timezone: str = Field("auto", min_length=1)
     daily: Optional[Union[str, Iterable[str]]] = None
 
+
 class HourlyForecastParams(LatLon):
     timezone: str = Field("auto", min_length=1)
     hourly: Optional[Union[str, Iterable[str]]] = None
     limit_hours: Optional[int] = Field(None, gt=0, le=168)
+
 
 class AirQualityParams(LatLon):
     timezone: str = Field("auto", min_length=1)
     hourly: Optional[Union[str, Iterable[str]]] = None
     current: Optional[Union[str, Iterable[str]]] = None
 
+
 class MarineParams(LatLon):
     timezone: str = Field("auto", min_length=1)
     hourly: Optional[Union[str, Iterable[str]]] = None
+
 
 class GeocodeParams(BaseModel):
     name: str = Field(..., min_length=2)
     count: int = Field(10, ge=1, le=100)
     language: Optional[str] = Field(None, min_length=2, max_length=5)
+
 
 class HistoricalParams(LatLon):
     start_date: str
@@ -58,8 +65,10 @@ class HistoricalParams(LatLon):
                 pass
         return v
 
+
 class HistoricalForecastParams(HistoricalParams):
     pass
+
 
 class WeatherBundleParams(LatLon):
     days: int = Field(3, ge=1, le=14)

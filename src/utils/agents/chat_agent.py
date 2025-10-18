@@ -6,10 +6,16 @@ from src.utils.context.local_context import LocalContext
 from src.utils.tools.context_tool import set_context_value
 
 
-def chat_agent_instructions(run_context: RunContextWrapper[LocalContext], agent: Agent[LocalContext]):
+def chat_agent_instructions(
+    run_context: RunContextWrapper[LocalContext], agent: Agent[LocalContext]
+):
     context = run_context.context.context
     print("Current context for chat agent:", context)
-    return get_prompt_from_file("chat_agent", {"context": json.dumps(context) if context else "No context available."})
+    return get_prompt_from_file(
+        "chat_agent",
+        {"context": json.dumps(context) if context else "No context available."},
+    )
+
 
 chat_agent = Agent[LocalContext](
     name="Chat Agent",
@@ -18,5 +24,5 @@ chat_agent = Agent[LocalContext](
     model_settings=model_settings["standard-min"],
     tools=[set_context_value],
     handoff_description="This is a chat agent that can handle conversational tasks.",
-    hooks=PrintingAgentHooks()
+    hooks=PrintingAgentHooks(),
 )

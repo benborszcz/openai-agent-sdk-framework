@@ -22,16 +22,15 @@ from src.types.weather_validation import (
     HistoricalParams,
     HistoricalForecastParams,
     WeatherBundleParams,
-    LatLon
+    LatLon,
 )
 
 # ---- Forecast tools --------------------------------------------------------
 
+
 @function_tool
 async def tool_get_current_weather(
-    latitude: float,
-    longitude: float,
-    timezone: str = "auto"
+    latitude: float, longitude: float, timezone: str = "auto"
 ) -> Dict[str, Any]:
     """
     Fetch the current weather for a given location.
@@ -45,7 +44,9 @@ async def tool_get_current_weather(
         A dictionary containing current weather data.
     """
     params = LatLon(latitude=latitude, longitude=longitude)
-    return await get_current_weather(params.latitude, params.longitude, timezone=timezone)
+    return await get_current_weather(
+        params.latitude, params.longitude, timezone=timezone
+    )
 
 
 @function_tool
@@ -69,8 +70,20 @@ async def tool_get_daily_forecast(
     Returns:
         A dictionary containing daily forecast data.
     """
-    params = DailyForecastParams(latitude=latitude, longitude=longitude, days=days, timezone=timezone, daily=daily)
-    return await get_daily_forecast(params.latitude, params.longitude, days=params.days, timezone=params.timezone, daily=params.daily)
+    params = DailyForecastParams(
+        latitude=latitude,
+        longitude=longitude,
+        days=days,
+        timezone=timezone,
+        daily=daily,
+    )
+    return await get_daily_forecast(
+        params.latitude,
+        params.longitude,
+        days=params.days,
+        timezone=params.timezone,
+        daily=params.daily,
+    )
 
 
 @function_tool
@@ -94,11 +107,24 @@ async def tool_get_hourly_forecast(
     Returns:
         A dictionary containing hourly forecast data.
     """
-    params = HourlyForecastParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly, limit_hours=limit_hours)
-    return await get_hourly_forecast(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly, limit_hours=params.limit_hours)
+    params = HourlyForecastParams(
+        latitude=latitude,
+        longitude=longitude,
+        timezone=timezone,
+        hourly=hourly,
+        limit_hours=limit_hours,
+    )
+    return await get_hourly_forecast(
+        params.latitude,
+        params.longitude,
+        timezone=params.timezone,
+        hourly=params.hourly,
+        limit_hours=params.limit_hours,
+    )
 
 
 # ---- Air Quality -----------------------------------------------------------
+
 
 @function_tool
 async def tool_get_air_quality(
@@ -121,11 +147,24 @@ async def tool_get_air_quality(
     Returns:
         A dictionary containing air quality data.
     """
-    params = AirQualityParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly, current=current)
-    return await get_air_quality(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly, current=params.current)
+    params = AirQualityParams(
+        latitude=latitude,
+        longitude=longitude,
+        timezone=timezone,
+        hourly=hourly,
+        current=current,
+    )
+    return await get_air_quality(
+        params.latitude,
+        params.longitude,
+        timezone=params.timezone,
+        hourly=params.hourly,
+        current=params.current,
+    )
 
 
 # ---- Marine ----------------------------------------------------------------
+
 
 @function_tool
 async def tool_get_marine_forecast(
@@ -146,11 +185,19 @@ async def tool_get_marine_forecast(
     Returns:
         A dictionary containing marine forecast data.
     """
-    params = MarineParams(latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly)
-    return await get_marine_forecast(params.latitude, params.longitude, timezone=params.timezone, hourly=params.hourly)
+    params = MarineParams(
+        latitude=latitude, longitude=longitude, timezone=timezone, hourly=hourly
+    )
+    return await get_marine_forecast(
+        params.latitude,
+        params.longitude,
+        timezone=params.timezone,
+        hourly=params.hourly,
+    )
 
 
 # ---- Geocoding -------------------------------------------------------------
+
 
 @function_tool
 async def tool_geocode_search(
@@ -161,22 +208,22 @@ async def tool_geocode_search(
     """
     Search for a location by name or postal code using the Open-Meteo Geocoding API.
 
-    This tool queries Open-Meteo’s free geocoding endpoint and returns matching 
-    locations with latitude/longitude and metadata. It supports filtering by country, 
+    This tool queries Open-Meteo’s free geocoding endpoint and returns matching
+    locations with latitude/longitude and metadata. It supports filtering by country,
     language localization, and multiple result formats.
 
     Args:
-        name: 
-            The location name or postal code to search for. 
-            - Minimum length: 2 characters (exact match only) 
+        name:
+            The location name or postal code to search for.
+            - Minimum length: 2 characters (exact match only)
             - 3 or more characters: enables fuzzy matching.
-        count: 
-            Maximum number of results to return. 
-            - Default: 10 
+        count:
+            Maximum number of results to return.
+            - Default: 10
             - Maximum: 100
-        language: 
+        language:
             Optional ISO language code (lowercase) to localize place names.
-            Example: "fr" for French, "es" for Spanish. If no translation exists, 
+            Example: "fr" for French, "es" for Spanish. If no translation exists,
             falls back to English or the native name.
 
     Returns:
@@ -190,13 +237,17 @@ async def tool_geocode_search(
             - `timezone`
         - `generationtime_ms`: Server processing time
     """
-    #print(f"Geocoding search for '{name}' (count={count}, language={language})")
+    # print(f"Geocoding search for '{name}' (count={count}, language={language})")
     params = GeocodeParams(name=name, count=count, language=language)
-    ret = await geocode_search(params.name, count=params.count, language=params.language)
-    #print(ret)
+    ret = await geocode_search(
+        params.name, count=params.count, language=params.language
+    )
+    # print(ret)
     return ret
 
+
 # ---- Historical ------------------------------------------------------------
+
 
 @function_tool
 async def tool_get_historical_weather(
@@ -221,8 +272,22 @@ async def tool_get_historical_weather(
     Returns:
         A dictionary containing historical weather data.
     """
-    params = HistoricalParams(latitude=latitude, longitude=longitude, start_date=start_date, end_date=end_date, timezone=timezone, hourly=hourly)
-    return await get_historical_weather(params.latitude, params.longitude, start_date=params.start_date, end_date=params.end_date, timezone=params.timezone, hourly=params.hourly)
+    params = HistoricalParams(
+        latitude=latitude,
+        longitude=longitude,
+        start_date=start_date,
+        end_date=end_date,
+        timezone=timezone,
+        hourly=hourly,
+    )
+    return await get_historical_weather(
+        params.latitude,
+        params.longitude,
+        start_date=params.start_date,
+        end_date=params.end_date,
+        timezone=params.timezone,
+        hourly=params.hourly,
+    )
 
 
 @function_tool
@@ -248,11 +313,26 @@ async def tool_get_historical_forecast(
     Returns:
         A dictionary containing historical forecast data.
     """
-    params = HistoricalForecastParams(latitude=latitude, longitude=longitude, start_date=start_date, end_date=end_date, timezone=timezone, hourly=hourly)
-    return await get_historical_forecast(params.latitude, params.longitude, start_date=params.start_date, end_date=params.end_date, timezone=params.timezone, hourly=params.hourly)
+    params = HistoricalForecastParams(
+        latitude=latitude,
+        longitude=longitude,
+        start_date=start_date,
+        end_date=end_date,
+        timezone=timezone,
+        hourly=hourly,
+    )
+    return await get_historical_forecast(
+        params.latitude,
+        params.longitude,
+        start_date=params.start_date,
+        end_date=params.end_date,
+        timezone=params.timezone,
+        hourly=params.hourly,
+    )
 
 
 # ---- Convenience bundle ----------------------------------------------------
+
 
 @function_tool
 async def tool_get_weather_bundle(
@@ -273,5 +353,9 @@ async def tool_get_weather_bundle(
     Returns:
         A dictionary containing current weather data.
     """
-    params = WeatherBundleParams(latitude=latitude, longitude=longitude, days=days, timezone=timezone)
-    return await get_weather_bundle(params.latitude, params.longitude, timezone=params.timezone, days=params.days)
+    params = WeatherBundleParams(
+        latitude=latitude, longitude=longitude, days=days, timezone=timezone
+    )
+    return await get_weather_bundle(
+        params.latitude, params.longitude, timezone=params.timezone, days=params.days
+    )
